@@ -15,273 +15,232 @@
             --sp-green: #1db954;
         }
 
+        /* --- TELA INICIAL (INTRO) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--sp-black);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .logo-spotify {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 30px;
+        }
+
+        .btn-abrir {
+            background-color: var(--sp-green);
+            color: var(--sp-white);
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .intro-hidden {
+            transform: translateY(-100vh) !important;
+        }
+
+        /* --- ESTILOS DO PLAYER --- */
         body {
             background-color: var(--sp-black);
             color: var(--sp-white);
             font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 0; padding: 0; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* --- Estilização do Player Principal (Topo) --- */
         .now-playing-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px 25px 40px 25px;
+            width: 100vw; height: 100vh; display: flex; flex-direction: column;
+            justify-content: space-between; padding: 20px 25px 40px 25px;
             box-sizing: border-box;
-            background: linear-gradient(to bottom, #4a4a4a 0%, var(--sp-black) 100%); /* Gradiente suave na capa */
+            background: linear-gradient(to bottom, #4a4a4a 0%, var(--sp-black) 100%);
         }
 
-        /* Header do Player */
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--sp-light-grey);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-
-        .icon-small { font-size: 1.2rem; color: var(--sp-white); }
-
-        /* Capa da Música Principal */
-        .album-art-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            margin: 30px 0;
-        }
+        .player-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--sp-light-grey); text-transform: uppercase; font-weight: 700; }
+        .album-art-container { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; margin: 30px 0; }
 
         .album-art {
-            width: 85vw;
-            height: 85vw;
-            max-width: 350px;
-            max-height: 350px;
-            border-radius: 8px; /* Cantos arredondados estilo Spotify novo */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            object-fit: cover; /* Garante que a foto preencha o quadrado */
+            width: 85vw; height: 85vw; max-width: 350px; max-height: 350px;
+            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: cover; transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        /* Informações da Música */
-        .track-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 25px;
-        }
+        .fade-out { opacity: 0; transform: scale(0.95); }
 
-        .track-text { display: flex; flex-direction: column; }
+        .track-info { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 25px; }
+        .track-text { display: flex; flex-direction: column; transition: opacity 0.3s; }
         .track-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
         .track-artist { font-size: 1rem; color: var(--sp-light-grey); }
-
         .icon-heart { color: var(--sp-green); font-size: 1.4rem; }
 
-        /* Barra de Progresso */
-        .progress-container {
-            width: 100%;
-            margin-bottom: 20px;
-        }
+        .progress-container { width: 100%; margin-bottom: 20px; }
+        .progress-bar { width: 100%; height: 4px; background-color: var(--sp-grey); border-radius: 2px; position: relative; }
+        .progress-current { width: 0%; height: 100%; background-color: var(--sp-white); border-radius: 2px; transition: width 0.1s linear; }
+        .progress-time { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--sp-light-grey); margin-top: 8px; }
 
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background-color: var(--sp-grey);
-            border-radius: 2px;
-            position: relative;
-        }
-
-        .progress-current {
-            width: 70%; /* PROGRESSO DA MÚSICA */
-            height: 100%;
-            background-color: var(--sp-white);
-            border-radius: 2px;
-        }
-
-        .progress-handle {
-            width: 10px;
-            height: 10px;
-            background-color: var(--sp-white);
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 70%; /* MESMO VALOR DO PROGRESS-CURRENT */
-            transform: translate(-50%, -50%);
-        }
-
-        .progress-time {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--sp-light-grey);
-            margin-top: 8px;
-        }
-
-        /* Controles do Player */
-        .player-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        .control-icon { font-size: 1.5rem; color: var(--sp-white); }
-        .icon-shuffle, .icon-repeat { color: var(--sp-light-grey); } /* Shuffle off por padrão */
+        .player-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 30px; }
         
         .play-pause-btn {
-            width: 65px;
-            height: 65px;
-            background-color: var(--sp-white);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--sp-black);
-            font-size: 2rem;
+            width: 65px; height: 65px; background-color: var(--sp-white);
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; color: var(--sp-black); font-size: 1.5rem;
+            cursor: pointer; transition: transform 0.2s;
         }
 
-        /* Footer do Player */
-        .player-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            font-size: 1.2rem;
-            color: var(--sp-light-grey);
-        }
-
-        /* --- Estilização da Galeria de Scroll (Baixo) --- */
-        .gallery-container {
-            width: 100vw;
-            background-color: var(--sp-black);
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .gallery-header {
-            width: 90%;
-            text-align: left;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--sp-white);
-        }
-
+        .gallery-container { width: 100vw; background-color: var(--sp-black); padding: 20px 0; display: flex; flex-direction: column; align-items: center; }
+        .gallery-header { width: 90%; text-align: left; font-weight: 700; font-size: 1.2rem; margin-bottom: 15px; }
+        
         .gallery-item {
-            width: 90%;
-            margin-bottom: 15px;
-            background-color: var(--sp-dark-grey);
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-sizing: border-box;
+            width: 90%; margin-bottom: 15px; background-color: var(--sp-dark-grey);
+            border-radius: 8px; padding: 10px; display: flex; align-items: center;
+            gap: 15px; cursor: pointer; transition: background-color 0.2s;
         }
 
-        .gallery-art {
-            width: 60px;
-            height: 60px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
+        #item-alianca { display: none; } 
 
+        .gallery-art { width: 60px; height: 60px; border-radius: 4px; object-fit: cover; }
         .gallery-info { display: flex; flex-direction: column; flex-grow: 1; }
-        .gallery-title { font-weight: 700; font-size: 1rem; }
-        .gallery-subtitle { font-size: 0.85rem; color: var(--sp-light-grey); }
-
-        .icon-more { color: var(--sp-light-grey); font-size: 1.2rem; }
-
     </style>
 </head>
 <body>
 
+    <div id="intro-screen">
+        <svg class="logo-spotify" viewBox="0 0 168 168">
+            <path fill="#1DB954" d="M83.996.277C37.747.277.253 37.77.253 84.019c0 46.251 37.494 83.741 83.743 83.741 46.254 0 83.744-37.49 83.744-83.741 0-46.246-37.49-83.742-83.744-83.742zm38.403 120.775c-1.488 2.436-4.67 3.208-7.105 1.72-19.998-12.213-45.168-14.985-74.808-8.213-2.783.637-5.559-1.104-6.193-3.887-.637-2.783 1.104-5.558 3.887-6.193 32.442-7.413 60.316-4.27 82.5 9.274 2.435 1.485 3.207 4.667 1.719 7.099zm10.25-22.798c-1.874 3.041-5.835 4.004-8.879 2.128-22.883-14.062-57.777-18.146-84.847-9.925-3.41 1.032-7.034-1.127-8.066-4.537-1.031-3.408 1.128-7.032 4.542-8.062 30.87-9.366 69.303-4.755 95.122 11.117 3.045 1.874 4.005 5.836 2.128 8.879zm1.085-24.232c-27.447-16.291-72.744-17.805-98.665-9.938-4.209 1.276-8.627-1.105-9.903-5.314-1.277-4.208 1.105-8.623 5.313-9.9 29.816-9.052 79.889-7.306 111.417 11.414 3.778 2.24 5.003 7.093 2.762 10.87-2.242 3.778-7.092 5.001-10.87 2.762z"/>
+        </svg>
+        <button class="btn-abrir" onclick="iniciarSpotify()">Abrir Playlist ❤️</button>
+    </div>
+
+    <audio id="main-audio" src="camisa10.mp3"></audio>
+
     <div class="now-playing-container">
-        
-        <div class="player-header">
-            <span class="icon-small">⌵</span> <span>Tocando da Playlist</span>
-            <span class="icon-small">⋮</span> </div>
-
+        <div class="player-header"><span>⌵</span> <span>Tocando da Playlist</span> <span>⋮</span></div>
         <div class="album-art-container">
-            <img src="capa_musica.jpg" alt="Capa do Nosso Amor" class="album-art">
+            <img id="main-img" src="Aliança.jpeg" alt="Capa" class="album-art">
         </div>
-
         <div class="track-section">
             <div class="track-info">
-                <div class="track-text">
-                    <span class="track-title">Nosso Momento Favorito</span>
-                    <span class="track-artist">Você e Eu</span>
+                <div id="track-text-container" class="track-text">
+                    <span id="main-title" class="track-title">Até Que Enfim</span>
+                    <span id="main-artist" class="track-artist">Álbum: O Sim que Mudou Tudo</span>
                 </div>
-                <span class="icon-heart">♥</span> </div>
-
+                <span class="icon-heart">♥</span>
+            </div>
             <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-current"></div>
-                    <div class="progress-handle"></div>
-                </div>
-                <div class="progress-time">
-                    <span>2:15</span>
-                    <span>3:05</span>
-                </div>
+                <div class="progress-bar"><div id="progress-fill" class="progress-current"></div></div>
+                <div class="progress-time"><span id="curr-time">0:00</span><span id="total-time">0:00</span></div>
             </div>
-
             <div class="player-controls">
-                <span class="control-icon icon-shuffle">⇆</span>
-                <span class="control-icon">⏮</span>
-                <div class="play-pause-btn">▶</div> <span class="control-icon">⏭</span>
-                <span class="control-icon icon-repeat">↻</span>
+                <span>⇆</span><span>⏮</span>
+                <div class="play-pause-btn" onclick="togglePlay()"><span id="play-icon">▶</span></div>
+                <span>⏭</span><span>↻</span>
             </div>
-
-            <div class="player-footer">
-                <span class="icon-small">💻</span> <span class="icon-small">🔗</span> </div>
         </div>
     </div>
 
     <div class="gallery-container">
         <div class="gallery-header">Outros Sucessos do Nosso Amor</div>
 
-        <div class="gallery-item">
-            <img src="foto1.jpg" alt="Foto 1" class="gallery-art">
-            <div class="gallery-info">
-                <span class="gallery-title">Aquele Sorriso</span>
-                <span class="gallery-subtitle">Álbum: Início de Tudo</span>
-            </div>
-            <span class="icon-more">⋮</span>
+        <div id="item-alianca" class="gallery-item" onclick="trocarMusica('Aliança.jpeg', 'Até Que Enfim', 'Álbum: O Sim que Mudou Tudo', 'camisa10.mp3', 'item-alianca')">
+            <img src="Aliança.jpeg" class="gallery-art">
+            <div class="gallery-info"><b>Até Que Enfim</b><br><small>Álbum: O Sim que Mudou Tudo</small></div>
         </div>
 
-        <div class="gallery-item">
-            <img src="foto2.jpg" alt="Foto 2" class="gallery-art">
-            <div class="gallery-info">
-                <span class="gallery-title">Nosso Jantar Especia</span>
-                <span class="gallery-subtitle">Álbum: Aventuras</span>
-            </div>
-            <span class="icon-more">⋮</span>
+        <div id="item-banco" class="gallery-item" onclick="trocarMusica('banco.jpeg', 'Minha Menina (Que não gosta de banho)', 'Álbum: Início de Tudo', 'ferrugem.mp3', 'item-banco')">
+            <img src="banco.jpeg" class="gallery-art">
+            <div class="gallery-info"><b>Minha Menina (Que não gosta de banho)</b><br><small>Álbum: Início de Tudo</small></div>
         </div>
 
-        <div class="gallery-item">
-            <img src="foto3.jpg" alt="Foto 3" class="gallery-art">
-            <div class="gallery-info">
-                <span class="gallery-title">Calango no Deserto 🦎</span>
-                <span class="gallery-subtitle">Álbum: Piadas Internas</span>
-            </div>
-            <span class="icon-more">⋮</span>
-        </div>
-        
+        <div id="item-elevador" class="gallery-item" onclick="trocarMusica('elevador.jpeg', 'Sorte a Minha', 'Álbum: Juntos', 'lua.mp3', 'item-elevador')">
+            <img src="elevador.jpeg" class="gallery-art">
+            <div class="gallery-info"><b>Sorte a Minha</b><br><small>Álbum: Juntos</small></div>
         </div>
 
+        <div id="item-foto3" class="gallery-item" onclick="trocarMusica('foto.png', 'Calango no Deserto 🦎', 'Álbum: Eu te AMO ❤️', 'cartabranca.mp3', 'item-foto3')">
+            <img src="foto.png" class="gallery-art">
+            <div class="gallery-info"><b>Calango no Deserto 🦎</b><br><small>Álbum: Eu te AMO ❤️</small></div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-icon');
+        const progressFill = document.getElementById('progress-fill');
+        const currTimeText = document.getElementById('curr-time');
+        const totalTimeText = document.getElementById('total-time');
+
+        // FUNÇÃO PARA INICIAR TUDO
+        function iniciarSpotify() {
+            document.getElementById('intro-screen').classList.add('intro-hidden');
+            audio.play();
+            playBtn.innerText = '⏸';
+        }
+
+        function togglePlay() {
+            if (audio.paused) { audio.play(); playBtn.innerText = '⏸'; }
+            else { audio.pause(); playBtn.innerText = '▶'; }
+        }
+
+        audio.ontimeupdate = () => {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = percent + '%';
+                currTimeText.innerText = formatTime(audio.currentTime);
+                totalTimeText.innerText = formatTime(audio.duration);
+            }
+        };
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function trocarMusica(imagem, titulo, subtitulo, arquivoAudio, idClicado) {
+            const mainImg = document.getElementById('main-img');
+            const trackText = document.getElementById('track-text-container');
+
+            mainImg.classList.add('fade-out');
+            trackText.style.opacity = '0';
+
+            setTimeout(() => {
+                mainImg.src = imagem;
+                document.getElementById('main-title').innerText = titulo;
+                document.getElementById('main-artist').innerText = subtitulo;
+                audio.src = arquivoAudio;
+                audio.play();
+                playBtn.innerText = '⏸';
+
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    item.style.display = 'flex';
+                });
+                document.getElementById(idClicado).style.display = 'none';
+
+                mainImg.classList.remove('fade-out');
+                trackText.style.opacity = '1';
+            }, 400);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
