@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Spotify - Nossa Playlist ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sp-black: #121212;
+            --sp-dark-grey: #181818;
+            --sp-grey: #282828;
+            --sp-light-grey: #b3b3b3;
+            --sp-white: #ffffff;
+            --sp-green: #1db954;
+        }
+
+        body {
+            background-color: var(--sp-black);
+            color: var(--sp-white);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Estilização do Player Principal (Topo) --- */
+        .now-playing-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 25px 40px 25px;
+            box-sizing: border-box;
+            background: linear-gradient(to bottom, #4a4a4a 0%, var(--sp-black) 100%); /* Gradiente suave na capa */
+        }
+
+        /* Header do Player */
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--sp-light-grey);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .icon-small { font-size: 1.2rem; color: var(--sp-white); }
+
+        /* Capa da Música Principal */
+        .album-art-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin: 30px 0;
+        }
+
+        .album-art {
+            width: 85vw;
+            height: 85vw;
+            max-width: 350px;
+            max-height: 350px;
+            border-radius: 8px; /* Cantos arredondados estilo Spotify novo */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: cover; /* Garante que a foto preencha o quadrado */
+        }
+
+        /* Informações da Música */
+        .track-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .track-text { display: flex; flex-direction: column; }
+        .track-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
+        .track-artist { font-size: 1rem; color: var(--sp-light-grey); }
+
+        .icon-heart { color: var(--sp-green); font-size: 1.4rem; }
+
+        /* Barra de Progresso */
+        .progress-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: var(--sp-grey);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .progress-current {
+            width: 70%; /* PROGRESSO DA MÚSICA */
+            height: 100%;
+            background-color: var(--sp-white);
+            border-radius: 2px;
+        }
+
+        .progress-handle {
+            width: 10px;
+            height: 10px;
+            background-color: var(--sp-white);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 70%; /* MESMO VALOR DO PROGRESS-CURRENT */
+            transform: translate(-50%, -50%);
+        }
+
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--sp-light-grey);
+            margin-top: 8px;
+        }
+
+        /* Controles do Player */
+        .player-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .control-icon { font-size: 1.5rem; color: var(--sp-white); }
+        .icon-shuffle, .icon-repeat { color: var(--sp-light-grey); } /* Shuffle off por padrão */
+        
+        .play-pause-btn {
+            width: 65px;
+            height: 65px;
+            background-color: var(--sp-white);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--sp-black);
+            font-size: 2rem;
+        }
+
+        /* Footer do Player */
+        .player-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: 1.2rem;
+            color: var(--sp-light-grey);
+        }
+
+        /* --- Estilização da Galeria de Scroll (Baixo) --- */
+        .gallery-container {
+            width: 100vw;
+            background-color: var(--sp-black);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-header {
+            width: 90%;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--sp-white);
+        }
+
+        .gallery-item {
+            width: 90%;
+            margin-bottom: 15px;
+            background-color: var(--sp-dark-grey);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .gallery-art {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .gallery-info { display: flex; flex-direction: column; flex-grow: 1; }
+        .gallery-title { font-weight: 700; font-size: 1rem; }
+        .gallery-subtitle { font-size: 0.85rem; color: var(--sp-light-grey); }
+
+        .icon-more { color: var(--sp-light-grey); font-size: 1.2rem; }
+
+    </style>
+</head>
+<body>
+
+    <div class="now-playing-container">
+        
+        <div class="player-header">
+            <span class="icon-small">⌵</span> <span>Tocando da Playlist</span>
+            <span class="icon-small">⋮</span> </div>
+
+        <div class="album-art-container">
+            <img src="capa_musica.jpg" alt="Capa do Nosso Amor" class="album-art">
+        </div>
+
+        <div class="track-section">
+            <div class="track-info">
+                <div class="track-text">
+                    <span class="track-title">Nosso Momento Favorito</span>
+                    <span class="track-artist">Você e Eu</span>
+                </div>
+                <span class="icon-heart">♥</span> </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-current"></div>
+                    <div class="progress-handle"></div>
+                </div>
+                <div class="progress-time">
+                    <span>2:15</span>
+                    <span>3:05</span>
+                </div>
+            </div>
+
+            <div class="player-controls">
+                <span class="control-icon icon-shuffle">⇆</span>
+                <span class="control-icon">⏮</span>
+                <div class="play-pause-btn">▶</div> <span class="control-icon">⏭</span>
+                <span class="control-icon icon-repeat">↻</span>
+            </div>
+
+            <div class="player-footer">
+                <span class="icon-small">💻</span> <span class="icon-small">🔗</span> </div>
+        </div>
+    </div>
+
+    <div class="gallery-container">
+        <div class="gallery-header">Outros Sucessos do Nosso Amor</div>
+
+        <div class="gallery-item">
+            <img src="foto1.jpg" alt="Foto 1" class="gallery-art">
+            <div class="gallery-info">
+                <span class="gallery-title">Aquele Sorriso</span>
+                <span class="gallery-subtitle">Álbum: Início de Tudo</span>
+            </div>
+            <span class="icon-more">⋮</span>
+        </div>
+
+        <div class="gallery-item">
+            <img src="foto2.jpg" alt="Foto 2" class="gallery-art">
+            <div class="gallery-info">
+                <span class="gallery-title">Nosso Jantar Especia</span>
+                <span class="gallery-subtitle">Álbum: Aventuras</span>
+            </div>
+            <span class="icon-more">⋮</span>
+        </div>
+
+        <div class="gallery-item">
+            <img src="foto3.jpg" alt="Foto 3" class="gallery-art">
+            <div class="gallery-info">
+                <span class="gallery-title">Calango no Deserto 🦎</span>
+                <span class="gallery-subtitle">Álbum: Piadas Internas</span>
+            </div>
+            <span class="icon-more">⋮</span>
+        </div>
+        
+        </div>
+
+</body>
+</html>
